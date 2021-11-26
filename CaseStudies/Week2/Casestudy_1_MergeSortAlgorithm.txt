@@ -1,0 +1,17 @@
+Merge Sort Algorithm
+
+MERGE_SORT(arr, beg, end)  
+if beg < end  
+set mid = (beg + end)/2  
+MERGE_SORT(arr, beg, mid)  
+MERGE_SORT(arr, mid + 1, end)  
+MERGE (arr, beg, mid, end)  
+end of if    
+END MERGE_SORT 
+
+1: Divide the array into two part.
+2: Divide the array into two parts again.
+3: Break each element into single parts.
+4: Sort the elements from smallest to largest.
+5: Merge the divided sorted arrays togather.
+6: The array has been sorted. 
