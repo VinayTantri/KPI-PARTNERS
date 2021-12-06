@@ -1,0 +1,16 @@
+1. display the subject code, subjects and total marks for every student.
+total marks is calculated as (s1+s2+s3...) 
+
+2. List the name and designations of the staff who have joined before Jan 2005.
+
+3. Display the employees for whom the manager is not allocated.
+
+4. display the details of the books that is not been returned and expected return date was monday.
+
+5. check the date of birth of the students and display only those students who were born on saturday or sunday.
+
+6. display the staff name and hire date (through this date find out the day!).create a new column as DAY in the result nd sort it to start from monday.
+
+7. display manager name, manager code and salary of the lowest paid staff in that manager's group.Exclude that group where the salary is less then 10k. Display other records in desc order.
+
+
