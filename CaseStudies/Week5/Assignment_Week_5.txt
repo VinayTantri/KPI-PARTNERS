@@ -1,0 +1,774 @@
+TASK 1:
+Understand the commonly used Data Models to build DWH
+
+1.Identify the given data model and briefly explain about it.
+->The given data model is of Snowflake Schema.
+->The snowflake schema is an expansion of the star schema where each point of the star explodes into more points.
+->It is called snowflake schema because the diagram of snowflake schema resembles a snowflake. 
+Snowflaking is a method of normalizing the dimension tables in a STAR schemas. 
+->When we normalize all the dimension tables entirely, the resultant structure resembles a snowflake with the fact table in the middle.
+->The snowflake schema consists of one fact table which is linked to many dimension tables, 
+which can be linked to other dimension tables through a many-to-one relationship. 
+->Tables in a snowflake schema are generally normalized to the third normal form. Each dimension table performs exactly one level in a hierarchy.
+
+2. Understand how to set the dependencies during Stage tables and Target Tables load?
+->we have a Stage model and a Target model. 
+->ETL process says, we first need to Extract data from the source.
+-> Therefore, after creating respective tables for Stage model we need to load data in it. 
+->Then comes the cleansing process after loading data we need to find the duplicates and unwanted data. 
+->Once we maintain the uniqueness, we need to create Primary and Foreign keys on them. Hence, establishing the relationship between them.
+->Now that the data in Stage model is cleaned up, next step is to load this data into the Target model. 
+->Therefore, after creating respective tables we need to  load the Stage model data to Target model by establishing the relationship.
+
+
+3.What are common issues with this model?
+Advantages:
+->Due to normalization in the Snowflake schema, the redundancy is reduced and therefore, it becomes easy to maintain and the save storage space.
+Disadvantage:
+->Harder to design compared to a star schema.
+->The primary disadvantage of the snowflake schema is the additional maintenance efforts required due to the increasing number of lookup tables.
+It is also known as a multi fact star schema.
+->More tables more join so more query execution time.
+
+4.Are there any options to convert this model to STAR? If SO,how?
+->Yes the given model can be converted to STAR Schema.
+->The snowflake schema is an extension of a star schema. 
+->Snowflaking is a method of normalizing the dimension tables in a STAR schemas.
+->When we normalize all the dimension tables entirely, the resultant structure resembles a snowflake with the fact table in the middle.
+
+TASK 2:
+Create stage tables: Provide all insert scripts:
+
+create table kpi_stg_locations(location_id number(20,0),address varchar(200),city varchar(50),country varchar(50),date_last_modified date,full_name 
+varchar(150),isinactive varchar(50),name varchar(50));
+
+create table kpi_stg_departments(date_last_modified date,department_id number(20,0),isinactive varchar(5),name varchar(10),ws_description varchar(50));
+
+create table kpi_stg_classes(class_id number(20,0),date_last_modified date,full_name varchar(30),isinactive varchar(5),name varchar(5));
+
+create table kpi_stg_transactions(transaction_id number(20,0),tranid varchar(30),transaction_type varchar(50),trandate date,channel_id number(20,0));
+
+create table kpi_stg_transaction_lines(transaction_id number(20,0),transaction_line_id number(20,0),location_id number(20,0),department_id number(20,0),
+item_id number(20,0),amount number(8,2),cost number(8,2),units number(5,0));
+
+create table kpi_stg_channel(date_created date ,is_record_inactive char,last_modified_date date,list_id number(20,0),list_item_name varchar(20));
+
+create table kpi_stg_items(item_id number(20,0),sku varchar(100),type_name varchar(30),salesdescription varchar(100),class_id number(20,0),
+ws_merchandise_department_id number(20,0),ws_merchandise_collection_id number(20,0),ws_merchandise_class_id number(20,0),
+ws_merchandise_subclass_id number(20,0));
+
+create table kpi_item_merchandise_depart(item_merchandise_department_id number(20,0),description varchar(50),item_merchandise_department_na varchar(10));
+
+create table kpi_item_merchandise_collect(item_merchandise_collection_id number(20,0),description varchar(50),item_merchandise_collection_na varchar(10));
+
+create table kpi_item_merchandise_class(item_merchandise_class_id number(20,0),description varchar(50),item_merchandise_class_name varchar(5));
+
+create table kpi_item_merchandise_subclass(item_merchandise_subclass_id number(20,0),description varchar(50),item_merchandise_subclass_name varchar(10));
+
+TASK 3:
+Load the data in the tables:Provide the insert scripts:
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""We Have loaded the data using the import data tool"""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""Here are some example of insert scripts of all the tables:"""""""""""""""""""""""""""""""""""""""""""""
+
+Insert into PRACTISE.KPI_STG_LOCATIONS (LOCATION_ID,ADDRESS,CITY,COUNTRY,DATE_LAST_MODIFIED,FULL_NAME,ISINACTIVE,NAME) values (2,'Singapore',null,'SG',to_date('07-AUG-17','DD-MON-RR'),'Test Location','Yes','Test Location');
+Insert into PRACTISE.KPI_STG_LOCATIONS (LOCATION_ID,ADDRESS,CITY,COUNTRY,DATE_LAST_MODIFIED,FULL_NAME,ISINACTIVE,NAME) values (3,'Singapore',null,'SG',to_date('07-AUG-17','DD-MON-RR'),'Test Location 2','Yes','Test Location 2');
+Insert into PRACTISE.KPI_STG_LOCATIONS (LOCATION_ID,ADDRESS,CITY,COUNTRY,DATE_LAST_MODIFIED,FULL_NAME,ISINACTIVE,NAME) values (4,'Australia',null,'AU',to_date('07-AUG-17','DD-MON-RR'),'Test Location 4','Yes','Test Location 4');
+Insert into PRACTISE.KPI_STG_LOCATIONS (LOCATION_ID,ADDRESS,CITY,COUNTRY,DATE_LAST_MODIFIED,FULL_NAME,ISINACTIVE,NAME) values (5,'07001 - WS NSW, Bondi Junction  472 Oxford Street  Bondi Junction NSW 2022  Australia','Bondi Junction','AU',to_date('07-AUG-17','DD-MON-RR'),'D07001 - WS NSW, Bondi Junction','Yes','D07001 - WS NSW, Bondi Junction');
+Insert into PRACTISE.KPI_STG_LOCATIONS (LOCATION_ID,ADDRESS,CITY,COUNTRY,DATE_LAST_MODIFIED,FULL_NAME,ISINACTIVE,NAME) values (6,'07002 - PB NSW, Bondi Junction  470 Oxford Street  Bondi Junction NSW 2022  Australia','Bondi Junction','AU',to_date('07-AUG-17','DD-MON-RR'),'D07002 - PB NSW, Bondi Junction','Yes','D07002 - PB NSW, Bondi Junction');
+
+Insert into PRACTISE.KPI_STG_DEPARTMENTS (DATE_LAST_MODIFIED,DEPARTMENT_ID,ISINACTIVE,NAME,WS_DESCRIPTION) values (to_date('25-SEP-15','DD-MON-RR'),1,'No','7001','Store WS NSW, Bondi Junction, 2/13 (7001)');
+Insert into PRACTISE.KPI_STG_DEPARTMENTS (DATE_LAST_MODIFIED,DEPARTMENT_ID,ISINACTIVE,NAME,WS_DESCRIPTION) values (to_date('11-NOV-20','DD-MON-RR'),2,'No','7002','Store  PB NSW, Bondi Junction, 2/13 (7002)');
+Insert into PRACTISE.KPI_STG_DEPARTMENTS (DATE_LAST_MODIFIED,DEPARTMENT_ID,ISINACTIVE,NAME,WS_DESCRIPTION) values (to_date('11-NOV-20','DD-MON-RR'),3,'No','7003','Store  PK NSW, Bondi Junction, 2/13 (7003)');
+Insert into PRACTISE.KPI_STG_DEPARTMENTS (DATE_LAST_MODIFIED,DEPARTMENT_ID,ISINACTIVE,NAME,WS_DESCRIPTION) values (to_date('25-SEP-15','DD-MON-RR'),4,'No','7004','Store WE NSW, Bondi Junction, 2/13 (7004)');
+Insert into PRACTISE.KPI_STG_DEPARTMENTS (DATE_LAST_MODIFIED,DEPARTMENT_ID,ISINACTIVE,NAME,WS_DESCRIPTION) values (to_date('18-DEC-12','DD-MON-RR'),5,'Yes','7211',null);
+
+Insert into PRACTISE.KPI_STG_CLASSES (CLASS_ID,DATE_LAST_MODIFIED,FULL_NAME,ISINACTIVE,NAME) values (1,to_date('13-FEB-18','DD-MON-RR'),'WE','No','WE');
+Insert into PRACTISE.KPI_STG_CLASSES (CLASS_ID,DATE_LAST_MODIFIED,FULL_NAME,ISINACTIVE,NAME) values (3,to_date('13-JUN-13','DD-MON-RR'),'PT','No','PT');
+Insert into PRACTISE.KPI_STG_CLASSES (CLASS_ID,DATE_LAST_MODIFIED,FULL_NAME,ISINACTIVE,NAME) values (4,to_date('13-JUN-13','DD-MON-RR'),'PB','No','PB');
+Insert into PRACTISE.KPI_STG_CLASSES (CLASS_ID,DATE_LAST_MODIFIED,FULL_NAME,ISINACTIVE,NAME) values (5,to_date('13-JUN-13','DD-MON-RR'),'PK','No','PK');
+Insert into PRACTISE.KPI_STG_CLASSES (CLASS_ID,DATE_LAST_MODIFIED,FULL_NAME,ISINACTIVE,NAME) values (6,to_date('13-JUN-13','DD-MON-RR'),'WS','No','WS');
+
+Insert into PRACTISE.KPI_STG_TRANSACTIONS (TRANSACTION_ID,TRANID,TRANSACTION_TYPE,TRANDATE,CHANNEL_ID) values (185339066,'2186178','Sales Order',to_date('01-SEP-21','DD-MON-RR'),2);
+Insert into PRACTISE.KPI_STG_TRANSACTIONS (TRANSACTION_ID,TRANID,TRANSACTION_TYPE,TRANDATE,CHANNEL_ID) values (185339085,'2186192','Sales Order',to_date('01-SEP-21','DD-MON-RR'),2);
+Insert into PRACTISE.KPI_STG_TRANSACTIONS (TRANSACTION_ID,TRANID,TRANSACTION_TYPE,TRANDATE,CHANNEL_ID) values (185339701,'2186202','Sales Order',to_date('01-SEP-21','DD-MON-RR'),2);
+Insert into PRACTISE.KPI_STG_TRANSACTIONS (TRANSACTION_ID,TRANID,TRANSACTION_TYPE,TRANDATE,CHANNEL_ID) values (185340234,'2186227','Sales Order',to_date('01-SEP-21','DD-MON-RR'),2);
+Insert into PRACTISE.KPI_STG_TRANSACTIONS (TRANSACTION_ID,TRANID,TRANSACTION_TYPE,TRANDATE,CHANNEL_ID) values (185341664,'2186252','Sales Order',to_date('01-SEP-21','DD-MON-RR'),2);
+
+Insert into PRACTISE.KPI_STG_TRANSACTION_LINES (TRANSACTION_ID,TRANSACTION_LINE_ID,LOCATION_ID,DEPARTMENT_ID,ITEM_ID,AMOUNT,COST,UNITS) values (185352302,2,383,28,34049,5,0,1);
+Insert into PRACTISE.KPI_STG_TRANSACTION_LINES (TRANSACTION_ID,TRANSACTION_LINE_ID,LOCATION_ID,DEPARTMENT_ID,ITEM_ID,AMOUNT,COST,UNITS) values (185356696,1,383,28,34049,5,0,1);
+Insert into PRACTISE.KPI_STG_TRANSACTION_LINES (TRANSACTION_ID,TRANSACTION_LINE_ID,LOCATION_ID,DEPARTMENT_ID,ITEM_ID,AMOUNT,COST,UNITS) values (185359939,1,36,43,41572,166,0,1);
+Insert into PRACTISE.KPI_STG_TRANSACTION_LINES (TRANSACTION_ID,TRANSACTION_LINE_ID,LOCATION_ID,DEPARTMENT_ID,ITEM_ID,AMOUNT,COST,UNITS) values (185360578,19,17,3,53525,9,0,1);
+Insert into PRACTISE.KPI_STG_TRANSACTION_LINES (TRANSACTION_ID,TRANSACTION_LINE_ID,LOCATION_ID,DEPARTMENT_ID,ITEM_ID,AMOUNT,COST,UNITS) values (185361422,1,383,30,34049,5,0,1);
+
+Insert into PRACTISE.KPI_STG_CHANNEL (DATE_CREATED,IS_RECORD_INACTIVE,LAST_MODIFIED_DATE,LIST_ID,LIST_ITEM_NAME) values (to_date('18-DEC-12','DD-MON-RR'),'F',to_date('30-APR-13','DD-MON-RR'),1,'Retail');
+Insert into PRACTISE.KPI_STG_CHANNEL (DATE_CREATED,IS_RECORD_INACTIVE,LAST_MODIFIED_DATE,LIST_ID,LIST_ITEM_NAME) values (to_date('18-DEC-12','DD-MON-RR'),'F',to_date('30-APR-13','DD-MON-RR'),2,'DTC');
+Insert into PRACTISE.KPI_STG_CHANNEL (DATE_CREATED,IS_RECORD_INACTIVE,LAST_MODIFIED_DATE,LIST_ID,LIST_ITEM_NAME) values (to_date('30-APR-13','DD-MON-RR'),'F',to_date('30-APR-13','DD-MON-RR'),3,'Care Center');
+Insert into PRACTISE.KPI_STG_CHANNEL (DATE_CREATED,IS_RECORD_INACTIVE,LAST_MODIFIED_DATE,LIST_ID,LIST_ITEM_NAME) values (to_date('07-MAY-13','DD-MON-RR'),'F',to_date('07-MAY-13','DD-MON-RR'),4,'RTC');
+Insert into PRACTISE.KPI_STG_CHANNEL (DATE_CREATED,IS_RECORD_INACTIVE,LAST_MODIFIED_DATE,LIST_ID,LIST_ITEM_NAME) values (to_date('06-AUG-15','DD-MON-RR'),'F',to_date('14-AUG-15','DD-MON-RR'),5,'Wholesale');
+
+Insert into PRACTISE.KPI_STG_ITEMS (ITEM_ID,SKU,TYPE_NAME,SALESDESCRIPTION,CLASS_ID,WS_MERCHANDISE_DEPARTMENT_ID,WS_MERCHANDISE_COLLECTION_ID,WS_MERCHANDISE_CLASS_ID,WS_MERCHANDISE_SUBCLASS_ID) values (1012,'1001809','Inventory Item','POCKETWATCHSmallMetalBronze',4,9,22,17,16);
+Insert into PRACTISE.KPI_STG_ITEMS (ITEM_ID,SKU,TYPE_NAME,SALESDESCRIPTION,CLASS_ID,WS_MERCHANDISE_DEPARTMENT_ID,WS_MERCHANDISE_COLLECTION_ID,WS_MERCHANDISE_CLASS_ID,WS_MERCHANDISE_SUBCLASS_ID) values (2333,'4871018','Inventory Item','Basic Filled VotiveBox Of SixteenIvoryUnscented',4,28,47,38,42);
+Insert into PRACTISE.KPI_STG_ITEMS (ITEM_ID,SKU,TYPE_NAME,SALESDESCRIPTION,CLASS_ID,WS_MERCHANDISE_DEPARTMENT_ID,WS_MERCHANDISE_COLLECTION_ID,WS_MERCHANDISE_CLASS_ID,WS_MERCHANDISE_SUBCLASS_ID) values (2340,'4884037','Inventory Item','PCKTWATCH ALARM CLKMetalBronze',4,9,22,17,16);
+Insert into PRACTISE.KPI_STG_ITEMS (ITEM_ID,SKU,TYPE_NAME,SALESDESCRIPTION,CLASS_ID,WS_MERCHANDISE_DEPARTMENT_ID,WS_MERCHANDISE_COLLECTION_ID,WS_MERCHANDISE_CLASS_ID,WS_MERCHANDISE_SUBCLASS_ID) values (2945,'7109234','Inventory Item','Single Clip RingCast IronSmall',4,14,18,15,14);
+Insert into PRACTISE.KPI_STG_ITEMS (ITEM_ID,SKU,TYPE_NAME,SALESDESCRIPTION,CLASS_ID,WS_MERCHANDISE_DEPARTMENT_ID,WS_MERCHANDISE_COLLECTION_ID,WS_MERCHANDISE_CLASS_ID,WS_MERCHANDISE_SUBCLASS_ID) values (2946,'7109531','Inventory Item','Single Clip RingAntique BronzeSmall',4,14,18,15,14);
+
+Insert into PRACTISE.KPI_ITEM_MERCHANDISE_DEPART (ITEM_MERCHANDISE_DEPARTMENT_ID,DESCRIPTION,ITEM_MERCHANDISE_DEPARTMENT_NA) values (4,'PB BEDDING','203');
+Insert into PRACTISE.KPI_ITEM_MERCHANDISE_DEPART (ITEM_MERCHANDISE_DEPARTMENT_ID,DESCRIPTION,ITEM_MERCHANDISE_DEPARTMENT_NA) values (5,'WS CUTLERY','105');
+Insert into PRACTISE.KPI_ITEM_MERCHANDISE_DEPART (ITEM_MERCHANDISE_DEPARTMENT_ID,DESCRIPTION,ITEM_MERCHANDISE_DEPARTMENT_NA) values (6,'WE WINDOW','808');
+Insert into PRACTISE.KPI_ITEM_MERCHANDISE_DEPART (ITEM_MERCHANDISE_DEPARTMENT_ID,DESCRIPTION,ITEM_MERCHANDISE_DEPARTMENT_NA) values (7,'WS SAVORY FOOD','108');
+Insert into PRACTISE.KPI_ITEM_MERCHANDISE_DEPART (ITEM_MERCHANDISE_DEPARTMENT_ID,DESCRIPTION,ITEM_MERCHANDISE_DEPARTMENT_NA) values (8,'WE PILLOWS','810');
+
+Insert into PRACTISE.KPI_ITEM_MERCHANDISE_COLLECT (ITEM_MERCHANDISE_COLLECTION_ID,DESCRIPTION,ITEM_MERCHANDISE_COLLECTION_NA) values (4,'PB ESSENTIALS BEDDING','PB1015');
+Insert into PRACTISE.KPI_ITEM_MERCHANDISE_COLLECT (ITEM_MERCHANDISE_COLLECTION_ID,DESCRIPTION,ITEM_MERCHANDISE_COLLECTION_NA) values (5,'MODERN WIRE COLLECTION','MODERN WIRE COLLECTION');
+Insert into PRACTISE.KPI_ITEM_MERCHANDISE_COLLECT (ITEM_MERCHANDISE_COLLECTION_ID,DESCRIPTION,ITEM_MERCHANDISE_COLLECTION_NA) values (6,'WE NEW LINEN COTTON GROMMET CURTAIN','WE7078');
+Insert into PRACTISE.KPI_ITEM_MERCHANDISE_COLLECT (ITEM_MERCHANDISE_COLLECTION_ID,DESCRIPTION,ITEM_MERCHANDISE_COLLECTION_NA) values (7,'WE BULLS EYE PILLOW COVER','WE3386');
+Insert into PRACTISE.KPI_ITEM_MERCHANDISE_COLLECT (ITEM_MERCHANDISE_COLLECTION_ID,DESCRIPTION,ITEM_MERCHANDISE_COLLECTION_NA) values (8,'PB HARRISON','PB159');
+
+Insert into PRACTISE.KPI_ITEM_MERCHANDISE_CLASS (ITEM_MERCHANDISE_CLASS_ID,DESCRIPTION,ITEM_MERCHANDISE_CLASS_NAME) values (4,'SHEETS','1');
+Insert into PRACTISE.KPI_ITEM_MERCHANDISE_CLASS (ITEM_MERCHANDISE_CLASS_ID,DESCRIPTION,ITEM_MERCHANDISE_CLASS_NAME) values (5,'WILLIAMS SONOMA','69');
+Insert into PRACTISE.KPI_ITEM_MERCHANDISE_CLASS (ITEM_MERCHANDISE_CLASS_ID,DESCRIPTION,ITEM_MERCHANDISE_CLASS_NAME) values (6,'SOLID CURTAINS','7');
+Insert into PRACTISE.KPI_ITEM_MERCHANDISE_CLASS (ITEM_MERCHANDISE_CLASS_ID,DESCRIPTION,ITEM_MERCHANDISE_CLASS_NAME) values (7,'VINEGARS','2');
+Insert into PRACTISE.KPI_ITEM_MERCHANDISE_CLASS (ITEM_MERCHANDISE_CLASS_ID,DESCRIPTION,ITEM_MERCHANDISE_CLASS_NAME) values (8,'PATTERN + STRIPE PLW','3');
+
+Insert into PRACTISE.KPI_ITEM_MERCH_SUBCLASS (ITEM_MERCHANDISE_SUBCLASS_ID,DESCRIPTION,ITEM_MERCHANDISE_SUBCLASS_NAME) values (4,'LIGHT FILTERING','1');
+Insert into PRACTISE.KPI_ITEM_MERCH_SUBCLASS (ITEM_MERCHANDISE_SUBCLASS_ID,DESCRIPTION,ITEM_MERCHANDISE_SUBCLASS_NAME) values (5,'BALSAMIC','3');
+Insert into PRACTISE.KPI_ITEM_MERCH_SUBCLASS (ITEM_MERCHANDISE_SUBCLASS_ID,DESCRIPTION,ITEM_MERCHANDISE_SUBCLASS_NAME) values (6,'UNASSIGNED','1');
+Insert into PRACTISE.KPI_ITEM_MERCH_SUBCLASS (ITEM_MERCHANDISE_SUBCLASS_ID,DESCRIPTION,ITEM_MERCHANDISE_SUBCLASS_NAME) values (7,'WOVEN','1');
+Insert into PRACTISE.KPI_ITEM_MERCH_SUBCLASS (ITEM_MERCHANDISE_SUBCLASS_ID,DESCRIPTION,ITEM_MERCHANDISE_SUBCLASS_NAME) values (8,'ICON','1');
+
+
+TASK 4:
+Analysing the keys:
+select count(*) from kpi_stg_channel;
+select count(*) from kpi_stg_transactions;
+select count(*) from kpi_stg_transaction_lines;
+select count(*) from kpi_stg_locations;
+select count(*) from kpi_stg_items;
+select count(*) from kpi_stg_departments;
+select count(*) from kpi_stg_classes;
+select count(*) from kpi_item_merchandise_class;
+select count(*) from kpi_item_merchandise_collect;
+select count(*) from kpi_item_merchandise_depart;
+select count(*) from kpi_item_merchandise_subclass;
+
+TASK 5:
+Delete the  duplicate records if exists and maintain unique record: Provide the DELETE scripts using Analytical function
+
+
+Delete from kpi_stg_items where rowid not in (
+select min(rowid) from kpi_stg_items group by item_id );
+
+Delete from kpi_stg_channel where rowid not in (
+select min(rowid) from kpi_stg_channel group by list_id );
+
+Delete from kpi_stg_transactions where rowid not in (
+select min(rowid) from kpi_stg_transactions group by transaction_id );
+
+Delete from kpi_stg_locations where rowid not in (
+select min(rowid) from kpi_stg_locations group by location_id );
+
+Delete from kpi_stg_transaction_lines where rowid not in (
+select min(rowid) from kpi_stg_transaction_lines group by transaction_id );
+
+Delete from kpi_stg_classes where rowid not in (
+select min(rowid) from kpi_stg_items group by class_id );
+
+Delete from kpi_item_merchandise_depart where rowid not in (
+select min(rowid) from kpi_item_merchandise_depart group by item_merchandise_department_na );
+
+Delete from kpi_item_merchandise_collect where rowid not in (
+select min(rowid) from kpi_item_merchandise_collect group by item_merchandise_collection_na );
+
+Delete from kpi_item_merchandise_class where rowid not in (
+select min(rowid) from kpi_item_merchandise_class group by item_merchandise_class_name );
+
+Delete from kpi_item_merchandise_subclass where rowid not in (
+select min(rowid) from kpi_item_merchandise_subclass group by item_merchandise_subclass_name );
+
+
+TASK 6:
+Create Primary Key on Stage tables: Provide the scripts used to create Primary Key
+
+alter table kpi_stg_transactions
+add constraint pk_transaction_id
+primary key(transaction_id);
+
+alter table kpi_stg_channel
+add constraint pk_list_id
+primary key(list_id);
+
+alter table kpi_stg_transaction_lines
+add constraint pk_transaction_lines 
+primary key(transaction_id,transaction_line_id);
+
+alter table kpi_stg_locations
+add constraint pk_location_id
+add primary key (location_id);
+
+alter table kpi_stg_departments
+add constraints pk_department_id
+primary key (department_id);
+
+alter table kpi_stg_classes
+add constraints pk_class_id
+primary key(class_id);
+
+alter table kpi_stg_items
+add constraints pk_item_id
+primary key(item_id);
+
+alter table kpi_item_merchandise_depart
+add constraints pk_item_department_id
+primary key(item_merchandise_department_id);
+
+alter table kpi_item_merchandise_collect
+add constraints pk_item_collect_id
+primary key(item_merchandise_collection_id);
+
+alter table kpi_item_merchandise_class
+add constraints pk_item_class_id
+primary key(item_merchandise_class_id);
+
+alter table kpi_item_merchandise_subclass
+add constraints pk_item_subclass_id
+primary key(item_merchandise_subclass_id);
+
+TASK 7:
+Identify the relationships between each table: Provide the SELECT SQLs executed to identify the relationships
+
+alter table kpi_stg_items
+add constraints fk_ws_department_id
+foreign key(ws_merchandise_department_id) references
+kpi_item_merchandise_depart(item_merchandise_department_id);
+
+select distinct ws_merchandise_collection_id from kpi_stg_items
+where
+ws_merchandise_collection_id not in 
+(select item_merchandise_collection_id from kpi_item_merchandise_collect);
+
+delete from kpi_stg_items
+where
+ws_merchandise_collection_id not in (select item_merchandise_collection_id from kpi_item_merchandise_collect);
+
+alter table kpi_stg_items
+add constraints fk_ws_collection_id
+foreign key(ws_merchandise_collection_id) references
+kpi_item_merchandise_collect(item_merchandise_collection_id);
+
+select  ws_merchandise_class_id from kpi_stg_items
+where
+ws_merchandise_class_id not in 
+(select item_merchandise_class_id from kpi_item_merchandise_class);
+
+delete from kpi_stg_items
+where
+ws_merchandise_class_id not in 
+(select item_merchandise_class_id from kpi_item_merchandise_class);
+
+alter table kpi_stg_items
+add constraints fk_ws_class_id
+foreign key(ws_merchandise_class_id) references
+kpi_item_merchandise_class(item_merchandise_class_id);
+
+alter table kpi_stg_transactions
+add foreign key(channel_id) references kpi_stg_channel(list_id);
+drop foreign key kpi_stg_transactions(channel_id);
+
+select ws_merchandise_subclass_id from kpi_stg_items
+where
+ws_merchandise_subclass_id not in 
+(select item_merchandise_subclass_id from kpi_item_merchandise_subclass);
+
+delete from kpi_stg_items
+where
+ws_merchandise_subclass_id not in 
+(select item_merchandise_subclass_id from kpi_item_merchandise_subclass);
+
+alter table kpi_stg_items
+add constraints fk_ws_subclass_id
+foreign key(ws_merchandise_subclass_id) references
+kpi_item_merchandise_subclass(item_merchandise_subclass_id);
+
+alter table kpi_stg_transaction_lines
+add constraints fk_location_id 
+foreign key (location_id) references
+kpi_stg_locations(location_id);
+
+select  distinct item_id from kpi_stg_transaction_lines
+where
+item_id not in 
+(select item_id from kpi_stg_items);
+
+delete from kpi_stg_transaction_lines
+where
+item_id not in 
+(select item_id from kpi_stg_items);
+
+alter table kpi_stg_transaction_lines
+add constraints fk_items_id 
+foreign key (item_id) references
+kpi_stg_items(item_id);
+
+select  department_id from kpi_stg_transaction_lines
+where
+department_id not in 
+(select department_id from kpi_stg_departments);
+
+delete from kpi_transaction_lines
+where
+department_id not in 
+(select department_id from kpi_stg_departments);
+
+alter table kpi_stg_transaction_lines
+add constraints fk_department_id 
+foreign key (department_id) references
+kpi_stg_departments(department_id);
+
+
+TASK 8:
+Create Target tables: 
+1. CREATE all the target tables
+
+create table kpi_channel_dim 
+(date_created date ,is_record_inactive char,last_modified_date date,list_id number(20,0),
+list_item_name varchar(20),kpi_dw_skey number(20,0),kpi_dw_insert_date date,kpi_dw_update_date date);
+
+create table kpi_location_dim 
+(location_id number(20,0),address varchar(100),city varchar(50),country varchar(50),
+date_last_modified date,full_name varchar(50),isinactive varchar(50),name varchar(50),
+kpi_dw_skey number(20,0),kpi_dw_insert_date date, kpi_dw_update_date date);
+
+create table kpi_transaction_line_fact 
+(transaction_id  number(20,0),transaction_line_id   number(20,0),tranid  varchar(30),
+transaction_type varchar(50),trandate date,kpi_channel_skey  number(20,0),kpi_location_skey  number(20,0),
+kpi_department_skey  number(20,0),kpi_item_skey  number(20,0),
+amount  number(8,2),cost  number(8,2),units  number(5,0),kpi_dw_skey  number(20,0));
+
+create table kpi_item_merch_depart_dim
+(item_merchandise_department_id number(20,0),description varchar(50),
+item_merchandise_department_na varchar(10),kpi_dw_skey  number(20,0),kpi_dw_insert_date  date,kpi_dw_update_date date);
+
+create table kpi_item_merch_coll_dim
+(item_merchandise_collection_id number(20,0),description varchar(50),item_merchandise_collection_na varchar(50),
+kpi_dw_skey number(20,0),kpi_dw_insert_date date,kpi_dw_update_date date);
+
+create table kpi_item_merchandise_class_dim
+(item_merchandise_class_id number(20,0),description varchar(50),item_merchandise_class_name varchar(50),
+kpi_dw_skey number(20,0),kpi_dw_insert_date date,kpi_dw_update_date date);
+
+create table kpi_department_dim 
+(date_last_modified date,department_id number(20,0),
+isinactive varchar(50),name varchar(10),ws_description varchar(50),kpi_dw_skey number(20,0),
+kpi_dw_insert_date date,kpi_dw_update_date date);
+
+create table kpi_item_dim
+(item number(20,0),sku varchar(100),type_name varchar(30),
+salesdescription  varchar(100),kpi_dw_skey  number(20,0),kpi_dw_insert_date  date,
+kpi_dw_update_date date,kpi_class_skey number(20,0),ws_merchandise_department_skey number(20,0),
+ws_merchandise_collection_skey number(20,0),ws_merchandise_class_skey  number(20,0),ws_merchandise_subclass_skey number(20,0));
+
+create table kpi_class_dim (class_id number(20,0),date_last_modified date,full_name varchar(50),
+isinactive varchar(5),name varchar(50),kpi_dw_skey number(20,0),
+kpi_dw_insert_date date,kpi_dw_update_date date);
+
+create table kpi_item_merch_subclass_dim(item_merchandise_subclass_id  number(20,0),description varchar(50),
+item_merchandise_subclass_name varchar(10),
+kpi_dw_skey number(20,0),kpi_dw_insert_date date,kpi_dw_update_date date);
+
+2.Create PRIMARY KEY on KPI_DW_SKEY
+
+Adding Primary Keys:
+
+SQL> alter table kpi_channel_dim add primary key(kpi_dw_skey);
+
+Table altered.
+
+SQL> alter table kpi_transaction_line_fact add primary key(kpi_dw_skey);
+
+Table altered.
+
+SQL> alter table kpi_department_dim add primary key(kpi_dw_skey);
+
+Table altered.
+
+SQL> alter table kpi_item_dim add primary key(kpi_dw_skey);
+
+Table altered.
+
+SQL> alter table kpi_class_dim add primary key(kpi_dw_skey);
+
+Table altered.
+
+SQL> alter table kpi_item_merch_depart_dim add primary key(kpi_dw_skey);
+
+Table altered.
+
+SQL> alter table kpi_item_merch_coll_dim add primary key(kpi_dw_skey);
+
+Table altered.
+
+SQL> alter table kpi_item_merchandise_class_dim add primary key(kpi_dw_skey);
+
+Table altered.
+
+SQL> alter table kpi_merch_subclass_dim add primary key(kpi_dw_skey);
+
+Table altered.
+
+TASK 9:
+Target Table load:
+Load the Target Tables using Stage Tables.
+1. Identify the sequence in which the Target Tables has to be loaded. Provide the reasons
+2. Provide the INSERT scripts used to perform the data load
+3.CREATE SEQUENCE to populate KPI_DW_SKEY field in all Target tables.
+
+
+
+SQL*Plus: Release 11.2.0.2.0 Production on Tue Dec 28 14:37:30 2021
+
+Copyright (c) 1982, 2014, Oracle.  All rights reserved.
+
+SQL> conn practise;
+Enter password:
+Connected.
+SQL> conn Targettable;
+Enter password:
+Connected.
+SQL> grant select on kpi_stg_classes to Targettable;
+
+Grant succeeded.
+
+SQL> conn Targettable;
+Enter password:
+Connected.
+SQL> insert into kpi_class_dim(class_id,date_last_modified,full_name,isinactive,name)(select * from kpi_stg_classes);
+
+6 rows created.
+
+SQL> create sequence kpi_dw_skey3;
+
+Sequence created.
+
+SQL> update kpi_class_dim set kpi_dw_skey=kpi_dw_skey.nextval;
+
+6 rows updated.
+
+SQL> alter table kpi_class_dim modify kpi_dw_insert_date default sysdate;
+
+Table altered.
+
+SQL> alter table kpi_class_dim modify kpi_dw_update_date default sysdate;
+
+Table altered.
+
+SQL> conn practise;
+Enter password:
+Connected.
+SQL> conn Targettable;
+Enter password:
+Connected.
+SQL> grant select on kpi_item_merchandise_depart to Targettable;
+
+Grant succeeded.
+
+SQL> conn Targettable;
+Enter password:
+Connected.
+SQL> insert into kpi_item_merch_depart_dim(item_merchandise_department_id,description,item_merchandise_department_na)(select * from kpi_item_merchandise_depart);
+
+87 rows created.
+
+SQL> create sequence kpi_dw_skey4;
+
+Sequence created.
+
+SQL> update kpi_item_merch_depart_dim set kpi_dw_skey=kpi_dw_skey.nextval;
+
+87 rows updated.
+
+SQL> alter table kpi_item_merch_depart_dim modify kpi_dw_insert_date default sysdate;
+
+Table altered.
+
+SQL> alter table kpi_item_merch_depart_dim modify kpi_dw_update_date default sysdate;
+
+Table altered.
+
+SQL> conn practise;
+Enter password:
+Connected.
+SQL> conn Targettable;
+Enter password:
+Connected.
+SQL> grant select on kpi_item_merchandise_depart to Targettable;
+
+Grant succeeded.
+
+SQL> conn Targettable;
+Enter password:
+Connected.
+SQL> insert into kpi_item_merch_coll_dim(item_merchandise_collection_id,description,item_merchandise_collection_na)(select * from kpi_item_merchandise_depart);
+
+87 rows created.
+
+SQL> create sequence kpi_dw_skey5;
+
+Sequence created.
+
+SQL> update kpi_item_merch_coll_dim set kpi_dw_skey=kpi_dw_skey.nextval;
+
+87 rows updated.
+
+SQL> alter table kpi_item_merch_coll_dim modify kpi_dw_insert_date default sysdate;
+
+Table altered.
+
+SQL> alter table kpi_item_merch_coll_dim modify kpi_dw_update_date default sysdate;
+
+Table altered.
+
+SQL> conn practise;
+Enter password:
+Connected.
+SQL> conn Targettable;
+Enter password:
+Connected.
+SQL> grant select on kpi_item_merchandise_class to Targettable;
+
+Grant succeeded.
+
+SQL> conn Targettable;
+Enter password:
+Connected.
+SQL> insert into kpi_item_merchandise_class_dim(item_merchandise_class_id,description,item_merchandise_class_name)(select * from kpi_item_merchandise_class);
+
+83 rows created.
+
+SQL> create sequence kpi_dw_skey6;
+
+Sequence created.
+
+SQL> update kpi_item_merchandise_class_dim set kpi_dw_skey=kpi_dw_skey.nextval;
+
+83 rows updated.
+
+SQL> alter table kpi_item_merchandise_class_dim modify kpi_dw_insert_date default sysdate;
+
+Table altered.
+
+SQL> alter table kpi_item_merchandise_class_dim modify kpi_dw_update_date default sysdate;
+
+Table altered.
+
+SQL> conn practise;
+Enter password:
+Connected.
+SQL> conn Targettable;
+Enter password:
+Connected.
+SQL>
+SQL> grant select on kpi_item_merchandise_subclass to Targettable;
+
+Grant succeeded.
+
+SQL> conn Targettable;
+Enter password:
+Connected.
+SQL> insert into kpi_item_merchandise_subclass_dim(item_merchandise_subclass_id,description,item_merchandise_subclass_name)(select * from kpi_item_merchandise_subclass);
+insert into kpi_item_merchandise_subclass_dim(item_merchandise_subclass_id,description,item_merchandise_subclass_name)(select * from kpi_item_merchandise_subclass)
+            *
+ERROR at line 1:
+ORA-00972: identifier is too long
+
+SQL> conn practise;
+Enter password:
+Connected.
+SQL> alter table kpi_item_merchandise_subclass rename to kpi_item_merch_subclass;
+
+Table altered.
+
+SQL> conn Targettable;
+Enter password:
+Connected.
+SQL> conn practise;
+Enter password:
+Connected.
+SQL> grant select on kpi_item_merch_subclass to Targettable;
+
+Grant succeeded.
+
+SQL> conn Targettable;
+Enter password:
+Connected.
+SQL> insert into kpi_item_merchandise_subclass_dim(item_merchandise_subclass_id,description,item_merchandise_subclass_name)(select * from kpi_item_merch_subclass);
+insert into kpi_item_merchandise_subclass_dim(item_merchandise_subclass_id,description,item_merchandise_subclass_name)(select * from kpi_item_merch_subclass)
+            *
+ERROR at line 1:
+ORA-00972: identifier is too long
+
+SQL> create table kpi_item_merch_subclass_dim(item_merchandise_subclass_id  number(20,0),description varchar(50),item_merchandise_subclass_name varchar(10),
+  2  Kpi_dw_skey  number(20,0),kpi_dw_insert_date date,kpi_dw_update_date date);
+
+Table created.
+
+SQL> insert into kpi_merch_subclass_dim(item_merchandise_subclass_id,description,item_merchandise_subclass_name)(select * from kpi_item_merchandise_subclass);
+
+85 rows created.
+
+SQL> create sequence kpi_dw_skey7;
+
+Sequence created.
+
+SQL> update kpi_merch_subclass_dim set kpi_dw_skey=kpi_dw_skey.nextval;
+
+85 rows updated.
+
+SQL> alter table kpi_merch_subclass_dim modify kpi_dw_insert_date default sysdate;
+
+Table altered.
+
+SQL> alter table kpi_merch_subclass_dim modify kpi_dw_update_date default sysdate;
+
+Table altered.
+
+SQL> conn practise;
+Enter password:
+Connected.
+SQL> conn Targettable;
+Enter password:
+Connected.
+
+SQL> grant select on kpi_stg_transaction_lines to Targettable;
+
+Grant succeeded.
+
+SQL> conn Targettable;
+Enter password:
+Connected.
+
+SQL> insert into kpi_transaction_line_fact(transaction_id, transaction_line_id, tranid, transaction_type, trandate, amount, cost, units)
+(select tl.transaction_id, tl.transaction_line_id, t.tranid, t.transaction_type, t.trandate, tl.amount, tl.cost, tl.units 
+from practise.kpi_stg_transaction_lines tl join practise.kpi_stg_transactions t on t.transaction_id=tl.transaction_id);
+
+2758 rows created.
+
+SQL> create sequence kpi_dw_skey8;
+
+Sequence created.
+
+SQL> update kpi_transaction_line_fact set kpi_dw_skey=kpi_dw_skey.nextval;
+
+2758 rows updated.
+
+SQL> conn practise;
+Enter password:
+Connected.
+SQL> conn Targettable;
+Enter password:
+Connected.
+SQL> grant select on kpi_stg_items to Targettable;
+
+Grant succeeded.
+
+SQL> insert into kpi_item_dim(item_id,sku,type_name,salesdescription,kpi_class_skey,ws_department_skey,ws_collection_skey,ws_class_skey,ws_subclass_skey)(select * from kpi_stg_items);
+
+88 rows created.
+
+SQL> update kpi_item_dim set kpi_dw_skey=kpi_dw_skey.nextval;
+
+88 rows updated.
+
+SQL> alter table kpi_item_dim modify kpi_dw_insert_date default sysdate;
+
+Table altered.
+
+SQL> alter table kpi_item_dim modify kpi_dw_update_date default sysdate;
+
+Table altered.
+
+
+
+update kpi_transaction_line_fact i set i.kpi_channel_skey =(select p.channel_id from practise.kpi_stg_transactions p
+where i.transaction_id=p.transaction_id);
+
+update kpi_transaction_line_fact i set i.kpi_location_skey =( select p.location_id from practise.kpi_stg_transaction_lines p
+where i.transaction_id=p.transaction_id);
+
+update kpi_transaction_line_fact i set i.kpi_item_skey =( select p.item_id from practise.kpi_stg_transaction_lines p
+where i.transaction_id=p.transaction_id);
+
+update kpi_transaction_line_fact i set i.kpi_department_skey =( select p.department_id from practise.kpi_stg_transaction_lines p
+where i.transaction_id=p.transaction_id);
+
+TASK 10:CREATE BRAND_NAME field in KPI_ITEM_DIM and populate values from NAME field present in KPI_CLASS_DIM
+
+1. Provide the script to add the new column
+
+SQL> alter table kpi_item_dim add brand_name varchar(5);
+
+Table altered.
+
+SQL> desc kpi_item_dim;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ ITEM_ID                                            NUMBER(20)
+ SKU                                                VARCHAR2(100)
+ TYPE_NAME                                          VARCHAR2(30)
+ SALESDESCRIPTION                                   VARCHAR2(100)
+ KPI_DW_SKEY                               NOT NULL NUMBER(20)
+ KPI_DW_INSERT_DATE                                 DATE
+ KPI_DW_UPDATE_DATE                                 DATE
+ KPI_CLASS_SKEY                                     NUMBER(20)
+ WS_DEPARTMENT_SKEY                                 NUMBER(20)
+ WS_COLLECTION_SKEY                                 NUMBER(20)
+ WS_CLASS_SKEY                                      NUMBER(20)
+ WS_SUBCLASS_SKEY                                   NUMBER(20)
+ BRAND_NAME                                         VARCHAR2(5)
+
+2. Provide the UPDATE script to populate BRAND_NAME field
+
+update kpi_item_dim i set i.brand_name=(select c.name from kpi_class_dim c where c.class_id=i.kpi_class_skey);
+
+TASK 11:
+Create kpi_item_dim_flat:
+create table item_dim_flat(sku varchar(100), item_type varchar(30), brand varchar(5), merch_department varchar(50), merch_dept_name varchar(10),
+merch_collection varchar(50), merch_collection_name varchar(50), merch_class varchar(50), merch_class_name varchar(5), 
+merch_subclass varchar(50), merch_subclass_name varchar(10), item_skey number);
+
+Creating the insert bulk script:
+
+insert into item_dim_flat select i.sku, i.type_name, i.brand_name,id.description_d, id.item_merchchandise_department_na,icl.description_cl,icl.item_merchandise_collection_na,
+ic.description_c, ic.item_merchandise_class_name,isc.description_s, isc.item_merchandise_subclass_name,i.kpi_dw_skeyfrom kpi_item_dim i join kpi_item_merch_depart_dim id 
+on i.kpi_dw_skey=id.kpi_dw_skey join kpi_item_merch_coll_dim icl on id.kpi_dw_skey=icl.kpi_dw_skey 
+join kpi_merch_class_dim ic on icl.kpi_dw_skey=ic.kpi_dw_skey join kpi_item_merch_subclass_dim isc on ic.kpi_dw_skey=isc.kpi_dw_skey;
+
+TASK 12
+1. Find the Top 5 and Bottom 5 Items based on the Demand Amount values in a single query
+select * from (select * from(select distinct(t.transaction_type), s.amount from kpi_stg_transactions t join kpi_stg_transaction_lines s on t.transaction_id=s.transaction_id
+where t.transaction_type='Sales Order' group by t.transaction_type, s.amount order by s.amount desc) where rownum<=5) top5, (select * from
+(select distinct(t.transaction_type), s.amount from kpi_stg_transactions t join kpi_stg_transaction_lines s on t.transaction_id=s.transaction_id where t.transaction_type='Sales Order'
+group by t.transaction_type, s.amount order by s.amount) where rownum<=5) bottom5;
+
+2.Which Department has the highest Demand and Sales Amount
+select distinct(d.name) from kpi_stg_departments d join kpi_stg_transaction_lines t on d.department_id=t.department_id
+join kpi_stg_transactions s on s.transaction_id=t.transaction_id group by s.transaction_type, d.name having max(t.amount) 
+in (select max(t.amount) from kpi_stg_transaction_lines t);
+
+4.Populate top 10 locations based on number of Demand Transactions using Analytical functions
+select * from(select distinct(l.city) from kpi_location_dim l 
+join kpi_transaction_line_fact t on l.kpi_dw_skey=t.kpi_dw_skey 
+where transaction_type='Sales Order') city where rownum<=10;
+
+5.Find Demand Amount, Demand Units, Sales Amount and Sales Units for each Channel
+select transaction_type, sum(amount) as amount, sum(units) as units 
+from kpi_transaction_line_fact group by transaction_type;
+
+
+
+
+
+
+
+
