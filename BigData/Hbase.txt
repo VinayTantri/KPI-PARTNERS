@@ -1,0 +1,166 @@
+
+hbase(main):028:0> alter 'emp','details','id'
+Updating all regions with the new schema...
+0/1 regions updated.
+1/1 regions updated.
+Done.
+Updating all regions with the new schema...
+1/1 regions updated.
+Done.
+0 row(s) in 5.1040 seconds
+
+hbase(main):029:0> scan 'emp'
+ROW                                                    COLUMN+CELL                                                                                                                                                  
+0 row(s) in 0.0190 seconds
+
+hbase(main):030:0> describe 'emp'
+Table emp is ENABLED                                                                                                                                                                                                
+emp                                                                                                                                                                                                                 
+COLUMN FAMILIES DESCRIPTION                                                                                                                                                                                         
+{NAME => 'details', BLOOMFILTER => 'ROW', VERSIONS => '1', IN_MEMORY => 'false', KEEP_DELETED_CELLS => 'FALSE', DATA_BLOCK_ENCODING => 'NONE', TTL => 'FOREVER', COMPRESSION => 'NONE', MIN_VERSIONS => '0', BLOCKCA
+CHE => 'true', BLOCKSIZE => '65536', REPLICATION_SCOPE => '0'}                                                                                                                                                      
+{NAME => 'id', BLOOMFILTER => 'ROW', VERSIONS => '1', IN_MEMORY => 'false', KEEP_DELETED_CELLS => 'FALSE', DATA_BLOCK_ENCODING => 'NONE', TTL => 'FOREVER', COMPRESSION => 'NONE', MIN_VERSIONS => '0', BLOCKCACHE =
+> 'true', BLOCKSIZE => '65536', REPLICATION_SCOPE => '0'}                                                                                                                                                           
+2 row(s) in 0.0510 seconds
+
+hbase(main):031:0> put 'emp','row1','details:note','name :Anil , Address : ABC'
+0 row(s) in 0.0640 seconds
+
+hbase(main):032:0> put 'emp' ,'row2','id:made','1234'
+0 row(s) in 0.0830 seconds
+
+hbase(main):033:0> scan 'emp'
+ROW                                                    COLUMN+CELL                                                                                                                                                  
+ row1                                                  column=details:note, timestamp=1641979736895, value=name :Anil , Address : ABC                                                                               
+ row2                                                  column=id:made, timestamp=1641979772129, value=1234                                                                                                          
+2 row(s) in 0.0310 seconds
+
+hbase(main):034:0> create 'student','personaldata','professional data'
+0 row(s) in 1.2540 seconds
+
+=> Hbase::Table - student
+hbase(main):035:0> list
+TABLE                                                                                                                                                                                                               
+emp                                                                                                                                                                                                                 
+student                                                                                                                                                                                                             
+2 row(s) in 0.0280 seconds
+
+=> ["emp", "student"]
+hbase(main):036:0> put 'student',1,'personaldata:name,address,number','Anil,ATP,1234567'
+0 row(s) in 0.0310 seconds
+
+hbase(main):037:0> put 'student',2,'professional data:college,address,number,id','SSE,PUTTAPARTHI,987654321,9099'
+0 row(s) in 0.0390 seconds
+
+hbase(main):038:0> scan 'student'
+ROW                                                    COLUMN+CELL                                                                                                                                                  
+ 1                                                     column=personaldata:name,address,number, timestamp=1641980139095, value=Anil,ATP,1234567                                                                     
+ 2                                                     column=professional data:college,address,number,id, timestamp=1641980267326, value=SSE,PUTTAPARTHI,987654321,9099                                            
+2 row(s) in 0.0170 seconds
+
+hbase(main):039:0> get 'student' ,1
+COLUMN                                                 CELL                                                                                                                                                         
+ personaldata:name,address,number                      timestamp=1641980139095, value=Anil,ATP,1234567                                                                                                              
+1 row(s) in 0.0110 seconds
+
+hbase(main):040:0> 
+[1]+  Stopped                 hbase shell
+[cloudera@quickstart ~]$ vi sample.txt
+[cloudera@quickstart ~]$ cat sample.txt
+anil,24,m
+vinay,25,m
+maruthi,23,m
+sree,20,f
+[cloudera@quickstart ~]$ r sample.txt
+bash: r: command not found
+[cloudera@quickstart ~]$ rm sample.txt
+rm: remove regular file `sample.txt'? 
+[cloudera@quickstart ~]$ cat sample.txt
+anil,24,m
+vinay,25,m
+maruthi,23,m
+sree,20,f
+[cloudera@quickstart ~]$ -r sample.txt
+bash: -r: command not found
+[cloudera@quickstart ~]$ vi sample.csv
+[cloudera@quickstart ~]$ cat sample.csv
+anil,23,m
+vinay,22,m
+sree,22,f
+roja,23,f
+[cloudera@quickstart ~]$ pwd
+/home/cloudera
+hbase(main):001:0> create 'employee','personal_data'
+0 row(s) in 1.7510 seconds
+
+=> Hbase::Table - employee
+hbase(main):002:0> describe 'employee'
+Table employee is ENABLED                                                                                                                                                                                           
+employee                                                                                                                                                                                                            
+COLUMN FAMILIES DESCRIPTION                                                                                                                                                                                         
+{NAME => 'personal_data', BLOOMFILTER => 'ROW', VERSIONS => '1', IN_MEMORY => 'false', KEEP_DELETED_CELLS => 'FALSE', DATA_BLOCK_ENCODING => 'NONE', TTL => 'FOREVER', COMPRESSION => 'NONE', MIN_VERSIONS => '0', B
+LOCKCACHE => 'true', BLOCKSIZE => '65536', REPLICATION_SCOPE => '0'}                                                                                                                                                
+1 row(s) in 0.2150 seconds
+
+
+hbase org.apache.hadoop.hbase.mapreduce.ImportTsv -Dimporttsv.separator="," -Dimporttsv.columns="HBASE_ROW_KEY,personel_data:name,personel_data:age,personel_data:gender" emp /user/cloudera/sample.csv
+                                                                                                                                                                     
+
+hbase(main):003:0> put 'employee',1,'personal_data:name,age,gender','Anil,24,m'
+0 row(s) in 0.6620 seconds
+
+hbase(main):004:0> put 'employee',2,'personal_data:name,age,gender','Vinay,23,m'
+0 row(s) in 0.0380 seconds
+
+hbase(main):005:0> put 'employee',3,'personal_data:name,age,gender','sree,20,f'
+0 row(s) in 0.0370 seconds
+
+hbase(main):006:0> scan 'employee'
+ROW                                                    COLUMN+CELL                                                                                                                                                  
+ 1                                                     column=personal_data:name,age,gender, timestamp=1641982289621, value=Anil,24,m                                                                               
+ 2                                                     column=personal_data:name,age,gender, timestamp=1641982375301, value=Vinay,23,m                                                                              
+ 3                                                     column=personal_data:name,age,gender, timestamp=1641982421274, value=sree,20,f                                                                               
+3 row(s) in 0.1540 seconds
+
+hbase(main):007:0> list
+TABLE                                                                                                                                                                                                               
+emp                                                                                                                                                                                                                 
+employee                                                                                                                                                                                                            
+student                                                                                                                                                                                                             
+3 row(s) in 0.1100 seconds
+
+=> ["emp", "employee", "student"]
+hbase(main):008:0> drop 'emp'
+
+ERROR: Table emp is enabled. Disable it first.
+
+Drop the named table. Table must first be disabled:
+  hbase> drop 't1'
+  hbase> drop 'ns1:t1'
+
+
+hbase(main):009:0> disable 'emp'
+0 row(s) in 2.4400 seconds
+
+hbase(main):010:0> drop 'emp'
+0 row(s) in 1.2870 seconds
+
+hbase(main):011:0> scan 'emp'
+ROW                                                    COLUMN+CELL                                                                                                                                                  
+
+ERROR: Unknown table emp!
+
+hbase(main):012:0> describe 'emp'
+
+ERROR: Unknown table emp!
+
+hbase(main):013:0> alter 'emp',{METHOD=>'table_att',READONLY=>true}
+
+ERROR: Can't find a table: emp
+
+hbase(main):018:0* alter 'emp',{METHOD=>'table_att', READONLY=>true}
+
+ERROR: Can't find a table: emp
+
+
+
