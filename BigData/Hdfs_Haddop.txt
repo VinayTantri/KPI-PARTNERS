@@ -1,0 +1,46 @@
+In terminal:
+sudo /home/cloudera/cloudera-manager --force --express
+
+hdfs dfs -ls
+
+mkdir kpifolder
+
+vi sample_kpi.txt
+
+cat sample_kpi.txt
+
+hadoop fs -put sample_kpi.txt user/cloudera
+
+hdfs dfs -ls /user/cloudera
+
+hadoop jar /usr/lib/hadoop-mapreduce/hadoop-map-reduce-examples.jar
+
+hadoop jar /usr/lib/hadoop-mapreduce/hadoop-mapreduce-examples.jar wordcount /user/cloudera/sample_kpi.txt /user/cloudera/output
+
+hadoop dfs -ls /user/cloudera/output
+
+hadoop dfs -cat /user/cloudera/output/part-r-00000
+
+
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/cloudera/output
+Found 2 items
+-rw-r--r--   1 cloudera cloudera          0 2022-01-05 22:38 /user/cloudera/output/_SUCCESS
+-rw-r--r--   1 cloudera cloudera         47 2022-01-05 22:38 /user/cloudera/output/part-r-00000
+[cloudera@quickstart ~]$ hdfs dfs -rm /user/cloudera/output/
+rm: `/user/cloudera/output': Is a directory
+[cloudera@quickstart ~]$ hdfs dfs -rm /user/cloudera/output
+rm: `/user/cloudera/output': Is a directory
+[cloudera@quickstart ~]$ hadoop fs -rm -r /user/cloudera/ouput
+rm: `/user/cloudera/ouput': No such file or directory
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/cloudera/output
+Found 2 items
+-rw-r--r--   1 cloudera cloudera          0 2022-01-05 22:38 /user/cloudera/output/_SUCCESS
+-rw-r--r--   1 cloudera cloudera         47 2022-01-05 22:38 /user/cloudera/output/part-r-00000
+[cloudera@quickstart ~]$ hdfs dfs -rm /user/cloudera/output/part-r-00000
+22/01/11 22:49:25 INFO fs.TrashPolicyDefault: Moved: 'hdfs://quickstart.cloudera:8020/user/cloudera/output/part-r-00000' to trash at: hdfs://quickstart.cloudera:8020/user/cloudera/.Trash/Current/user/cloudera/output/part-r-00000
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/cloudera/output
+Found 1 items
+-rw-r--r--   1 cloudera cloudera          0 2022-01-05 22:38 /user/cloudera/output/_SUCCESS
+[cloudera@quickstart ~]$ hdfs dfs -rm /user/cloudera/output/_SUCCESS
+22/01/11 22:50:10 INFO fs.TrashPolicyDefault: Moved: 'hdfs://quickstart.cloudera:8020/user/cloudera/output/_SUCCESS' to trash at: hdfs://quickstart.cloudera:8020/user/cloudera/.Trash/Current/user/cloudera/output/_SUCCESS
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/cloudera/output
