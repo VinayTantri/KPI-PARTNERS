@@ -1,0 +1,68 @@
+[cloudera@quickstart ~]$ hive
+
+hive> show databases;
+OK
+default
+test
+Time taken: 3.522 seconds, Fetched: 2 row(s)
+hive> show tables;
+OK
+Time taken: 0.536 seconds
+hive> create database organization;
+OK
+Time taken: 0.13 seconds
+hive> show databases;
+OK
+default
+organization
+test
+Time taken: 0.027 seconds, Fetched: 3 row(s)
+hive> use organization;
+OK
+Time taken: 0.04 seconds
+hive> create table employee(id int,name string,city string,department string,salary float,domain string);
+OK
+Time taken: 0.359 seconds
+
+hive> select * from employee;
+OK
+Time taken: 0.993 seconds
+hive> insert into employee values(111,'Ashwin','Mangalore','CSE',30000,'trainee');
+OK
+Time taken: 67.631 seconds
+hive> select * from employee;
+OK
+111	Ashwin	Mangalore	CSE	30000.0	trainee
+Time taken: 0.11 seconds, Fetched: 1 row(s)
+hive> insert into employee values(112,'Vinay','Sirsi','CSE',28000,'mgr');
+OK
+Time taken: 42.121 seconds
+hive> select * from employee;
+OK
+111	Ashwin	Mangalore	CSE	30000.0	trainee
+112	Vinay	Sirsi	CSE	28000.0	mgr
+Time taken: 0.139 seconds, Fetched: 2 row(s)
+
+
+hive> show databases;
+OK
+default
+organization
+test
+Time taken: 0.077 seconds, Fetched: 3 row(s)
+hive> use organization;
+OK
+Time taken: 0.071 seconds
+hive> show tables;
+OK
+employee
+Time taken: 0.031 seconds, Fetched: 1 row(s)
+hive> desc employee;
+OK
+id                  	int                 	                    
+name                	string              	                    
+city                	string              	                    
+department          	string              	                    
+salary              	float               	                    
+domain              	string              	                    
+Time taken: 0.328 seconds, Fetched: 6 row(s)
