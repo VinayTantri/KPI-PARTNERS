@@ -1,0 +1,366 @@
+[cloudera@quickstart ~]$ sudo service mysqld status
+mysqld (pid  2040) is running...
+[cloudera@quickstart ~]$ mysql -u root -h localhost -p
+Enter password: 
+ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)
+[cloudera@quickstart ~]$ mysql -u root -h localhost -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 38
+Server version: 5.1.73 Source distribution
+
+Copyright (c) 2000, 2013, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| cm                 |
+| firehose           |
+| hue                |
+| metastore          |
+| mysql              |
+| nav                |
+| navms              |
+| oozie              |
+| retail_db          |
+| rman               |
+| sentry             |
+| zeyo_db_20         |
+| zeyodb             |
++--------------------+
+14 rows in set (0.01 sec)
+
+mysql> use mysql;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++---------------------------+
+| Tables_in_mysql           |
++---------------------------+
+| columns_priv              |
+| db                        |
+| event                     |
+| func                      |
+| general_log               |
+| help_category             |
+| help_keyword              |
+| help_relation             |
+| help_topic                |
+| host                      |
+| ndb_binlog_index          |
+| plugin                    |
+| proc                      |
+| procs_priv                |
+| servers                   |
+| slow_log                  |
+| tables_priv               |
+| time_zone                 |
+| time_zone_leap_second     |
+| time_zone_name            |
+| time_zone_transition      |
+| time_zone_transition_type |
+| user                      |
++---------------------------+
+23 rows in set (0.00 sec)
+
+mysql> describe db;
++-----------------------+---------------+------+-----+---------+-------+
+| Field                 | Type          | Null | Key | Default | Extra |
++-----------------------+---------------+------+-----+---------+-------+
+| Host                  | char(60)      | NO   | PRI |         |       |
+| Db                    | char(64)      | NO   | PRI |         |       |
+| User                  | char(16)      | NO   | PRI |         |       |
+| Select_priv           | enum('N','Y') | NO   |     | N       |       |
+| Insert_priv           | enum('N','Y') | NO   |     | N       |       |
+| Update_priv           | enum('N','Y') | NO   |     | N       |       |
+| Delete_priv           | enum('N','Y') | NO   |     | N       |       |
+| Create_priv           | enum('N','Y') | NO   |     | N       |       |
+| Drop_priv             | enum('N','Y') | NO   |     | N       |       |
+| Grant_priv            | enum('N','Y') | NO   |     | N       |       |
+| References_priv       | enum('N','Y') | NO   |     | N       |       |
+| Index_priv            | enum('N','Y') | NO   |     | N       |       |
+| Alter_priv            | enum('N','Y') | NO   |     | N       |       |
+| Create_tmp_table_priv | enum('N','Y') | NO   |     | N       |       |
+| Lock_tables_priv      | enum('N','Y') | NO   |     | N       |       |
+| Create_view_priv      | enum('N','Y') | NO   |     | N       |       |
+| Show_view_priv        | enum('N','Y') | NO   |     | N       |       |
+| Create_routine_priv   | enum('N','Y') | NO   |     | N       |       |
+| Alter_routine_priv    | enum('N','Y') | NO   |     | N       |       |
+| Execute_priv          | enum('N','Y') | NO   |     | N       |       |
+| Event_priv            | enum('N','Y') | NO   |     | N       |       |
+| Trigger_priv          | enum('N','Y') | NO   |     | N       |       |
++-----------------------+---------------+------+-----+---------+-------+
+22 rows in set (0.00 sec)
+
+mysql> exit;
+Bye
+[cloudera@quickstart ~]$ mysql -u root -h localhost -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 39
+Server version: 5.1.73 Source distribution
+
+Copyright (c) 2000, 2013, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> list;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'list' at line 1
+mysql> create table KPI(name string,details varchar(10),id number);
+ERROR 1046 (3D000): No database selected
+mysql> show database;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'database' at line 1
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| cm                 |
+| firehose           |
+| hue                |
+| metastore          |
+| mysql              |
+| nav                |
+| navms              |
+| oozie              |
+| retail_db          |
+| rman               |
+| sentry             |
+| zeyo_db_20         |
+| zeyodb             |
++--------------------+
+14 rows in set (0.00 sec)
+
+mysql> use mysql;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> create table kpipartners(name string,id number,details varchar);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'string,id number,details varchar)' at line 1
+mysql> select * from kpi;
+ERROR 1146 (42S02): Table 'mysql.kpi' doesn't exist
+mysql> create table KPI(name varchar2(20),id number(10),details varchar2(20));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'varchar2(20),id number(10),details varchar2(20))' at line 1
+mysql> create database KPIPARTNERS;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| KPIPARTNERS        |
+| cm                 |
+| firehose           |
+| hue                |
+| metastore          |
+| mysql              |
+| nav                |
+| navms              |
+| oozie              |
+| retail_db          |
+| rman               |
+| sentry             |
+| zeyo_db_20         |
+| zeyodb             |
++--------------------+
+15 rows in set (0.00 sec)
+
+mysql> drop database KPIPARTNERS;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| cm                 |
+| firehose           |
+| hue                |
+| metastore          |
+| mysql              |
+| nav                |
+| navms              |
+| oozie              |
+| retail_db          |
+| rman               |
+| sentry             |
+| zeyo_db_20         |
+| zeyodb             |
++--------------------+
+14 rows in set (0.00 sec)
+
+mysql> create database KPIPARTNERS;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| KPIPARTNERS        |
+| cm                 |
+| firehose           |
+| hue                |
+| metastore          |
+| mysql              |
+| nav                |
+| navms              |
+| oozie              |
+| retail_db          |
+| rman               |
+| sentry             |
+| zeyo_db_20         |
+| zeyodb             |
++--------------------+
+15 rows in set (0.00 sec)
+
+mysql> use database KPIPARTNERS;
+ERROR 1049 (42000): Unknown database 'database'
+mysql> USE KPIPARTNERS;
+Database changed
+mysql> show tables;
+Empty set (0.00 sec)
+
+mysql> use cm;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++--------------------------------+
+| Tables_in_cm                   |
++--------------------------------+
+| AUDITS                         |
+| CLIENT_CONFIGS                 |
+| CLIENT_CONFIGS_TO_HOSTS        |
+| CLUSTERS                       |
+| CLUSTERS_AUD                   |
+| CLUSTER_ACTIVATED_RELEASES     |
+| CLUSTER_ACTIVATED_RELEASES_AUD |
+| CLUSTER_MANAGED_RELEASES       |
+| CLUSTER_UNDISTRIBUTED_RELEASES |
+| CM_PEERS                       |
+| CM_VERSION                     |
+| COMMANDS                       |
+| COMMANDS_DETAIL                |
+| COMMAND_SCHEDULES              |
+| CONFIGS                        |
+| CONFIGS_AUD                    |
+| CONFIG_CONTAINERS              |
+| CREDENTIALS                    |
+| DIAGNOSTICS_EVENTS             |
+| EXTERNAL_ACCOUNTS              |
+| EXTERNAL_ACCOUNTS_AUD          |
+| GLOBAL_SETTINGS                |
+| HOSTS                          |
+| HOSTS_AUD                      |
+| HOST_TEMPLATES                 |
+| HOST_TEMPLATE_TO_ROLE_CONF_GRP |
+| METRICS                        |
+| PARCELS                        |
+| PARCEL_COMPONENTS              |
+| PROCESSES                      |
+| PROCESSES_DETAIL               |
+| PROCESS_ACTIVE_RELEASES        |
+| RELEASES                       |
+| RELEASES_AUD                   |
+| REVISIONS                      |
+| ROLES                          |
+| ROLES_AUD                      |
+| ROLE_CONFIG_GROUPS             |
+| ROLE_CONFIG_GROUPS_AUD         |
+| ROLE_STALENESS_STATUS          |
+| SCHEMA_VERSION                 |
+| SERVICES                       |
+| SERVICES_AUD                   |
+| SNAPSHOT_POLICIES              |
+| USERS                          |
+| USER_ROLES                     |
+| USER_SETTINGS                  |
++--------------------------------+
+47 rows in set (0.00 sec)
+
+mysql> select * from parcels;
+ERROR 1146 (42S02): Table 'cm.parcels' doesn't exist
+mysql> select * from USERS;
++---------+-----------------------------------------------+------------------------------------------------------------------+----------------------+----------------+-------------------------+
+| USER_ID | USER_NAME                                     | PASSWORD_HASH                                                    | PASSWORD_SALT        | PASSWORD_LOGIN | OPTIMISTIC_LOCK_VERSION |
++---------+-----------------------------------------------+------------------------------------------------------------------+----------------------+----------------+-------------------------+
+|       1 | admin                                         | 76621ebf76198146a4ed7600f82690198c7f9f707fdfdbed0d8ae10af226ca0d |  -306873736560815346 |              1 |                       2 |
+|       2 | cloudera                                      | 857be71c83eddfb5665a10bdd4d642eb7f6998dfa36c090518378ccbf5d6f0f3 |  5245763999576297300 |              1 |                       1 |
+|       3 | __cloudera_internal_user__mgmt-HOSTMONITOR    | f4b283839dfabdc94f70e4dca72911cb5c211dc51d5e694cd481ed82676a6d5c |  1788232191714536485 |              1 |                       1 |
+|       4 | __cloudera_internal_user__mgmt-SERVICEMONITOR | 294d0e4928e06779e589e894006523d7209b4943923a6c2e911dbf752aca9a02 | -5883873479352655389 |              1 |                       1 |
+|       5 | __cloudera_internal_user__mgmt-EVENTSERVER    | acdaa9266b9e5c993599f230f24242d50b116c1128ca5db750748839e56a22c3 |  5938754032325049442 |              1 |                       1 |
++---------+-----------------------------------------------+------------------------------------------------------------------+----------------------+----------------+-------------------------+
+5 rows in set (0.00 sec)
+
+mysql> use KPIPARTNERS;
+Database changed
+mysql> create table students(rollno int,name char(20),class int,section char(2));
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> desc students;
++---------+----------+------+-----+---------+-------+
+| Field   | Type     | Null | Key | Default | Extra |
++---------+----------+------+-----+---------+-------+
+| rollno  | int(11)  | YES  |     | NULL    |       |
+| name    | char(20) | YES  |     | NULL    |       |
+| class   | int(11)  | YES  |     | NULL    |       |
+| section | char(2)  | YES  |     | NULL    |       |
++---------+----------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> insert into students values(101,'Anil',10,'A');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from students;
++--------+------+-------+---------+
+| rollno | name | class | section |
++--------+------+-------+---------+
+|    101 |Vinay |    10 | A       |
++--------+------+-------+---------+
+1 row in set (0.00 sec)
+
+mysql> select name from students;
++------+
+| name |
++------+
+|Vinay |
++------+
+1 row in set (0.00 sec)
+
+mysql> select name,class,section from students;
++------+-------+---------+
+| name | class | section |
++------+-------+---------+
+|Vinay |    10 | A       |
++------+-------+---------+
+1 row in set (0.00 sec)
+
+mysql> insert into students values(102,'Ashwini',9,'B');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from students;
++--------+------+-------+---------+
+| rollno | name | class | section |
++--------+------+-------+---------+
+|   101 | Vinay |    10 | A       |
+|   102 |Ashwini|     9 | B       |
++--------+------+-------+---------+
+2 rows in set (0.00 sec)
